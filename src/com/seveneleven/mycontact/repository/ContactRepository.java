@@ -1,4 +1,4 @@
-// In-memory repository for storing and retrieving Contact objects (UC4 - no hardDelete, no deleted filter)
+// In-memory repository for contacts - UC7 adds hardDelete() and filters soft-deleted contacts in findByOwner
 package com.seveneleven.mycontact.repository;
 
 import com.seveneleven.mycontact.model.Contact;
@@ -18,10 +18,16 @@ public class ContactRepository {
         return Optional.ofNullable(store.get(id));
     }
 
+    // UC7 — excludes soft-deleted contacts from normal listing
     public List<Contact> findByOwner(UUID ownerId) {
         return store.values().stream()
-            .filter(c -> c.getOwnerId().equals(ownerId))
+            .filter(c -> c.getOwnerId().equals(ownerId) && !c.isDeleted())
             .collect(Collectors.toList());
+    }
+
+    // UC7 — permanently removes a contact from storage (hard delete)
+    public void hardDelete(UUID id) {
+        store.remove(id);
     }
 
     public List<Contact> findAll() {

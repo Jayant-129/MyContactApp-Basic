@@ -31,3 +31,8 @@
 - **Classes**: `PersonContact` setters, `OrganizationContact` setters, `ContactService.editPerson*()`, `ContactService.editOrg*()`
 - **OOP**: Setter methods with validation, `instanceof` type check before cast
 - **Java**: `LocalDate.parse()`, defensive validation before state mutation
+
+### UC7 — Delete Contacts
+- **Classes**: `Contact.softDelete()`, `ContactRepository.hardDelete()`, `ContactService.softDeleteContact()`, `ContactService.hardDeleteContact()`
+- **OOP**: Lifecycle state managed via `boolean deleted` flag, encapsulated delete logic
+- **Java**: `HashMap.remove()` for hard delete, `isDeleted()` filter in repository queries

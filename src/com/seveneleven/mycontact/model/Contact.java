@@ -1,4 +1,4 @@
-// Abstract base class representing a contact - UC5 adds toString() for formatted display
+// Abstract base class for contacts - UC7 adds boolean deleted flag, softDelete() and restore() for lifecycle management
 package com.seveneleven.mycontact.model;
 
 import java.time.LocalDateTime;
@@ -14,28 +14,41 @@ public abstract class Contact {
     private final LocalDateTime createdAt;
     private int contactCount;
 
+    // UC7 — lifecycle fields for soft-delete support
+    private boolean deleted;
+    private LocalDateTime updatedAt;
+
     public Contact(UUID ownerId) {
-        this.contactId    = UUID.randomUUID();
-        this.ownerId      = ownerId;
-        this.phones       = new ArrayList<>();
-        this.emails       = new ArrayList<>();
-        this.tags         = new HashSet<>();
-        this.createdAt    = LocalDateTime.now();
+        this.contactId  = UUID.randomUUID();
+        this.ownerId    = ownerId;
+        this.phones     = new ArrayList<>();
+        this.emails     = new ArrayList<>();
+        this.tags       = new HashSet<>();
+        this.createdAt  = LocalDateTime.now();
+        this.updatedAt  = LocalDateTime.now();
+        this.deleted    = false;
         this.contactCount = 0;
     }
 
     public abstract String getDisplayName();
 
-    public void addPhone(PhoneNumber phone)   { phones.add(phone); }
-    public void removePhone(String number)    { phones.removeIf(p -> p.getNumber().equals(number)); }
-    public void addEmail(EmailAddress email)  { emails.add(email); }
-    public void removeEmail(String address)   { emails.removeIf(e -> e.getAddress().equalsIgnoreCase(address)); }
-    public void addTag(Tag tag)               { tags.add(tag); }
-    public void removeTag(Tag tag)            { tags.remove(tag); }
+    public void addPhone(PhoneNumber phone)   { phones.add(phone);  touch(); }
+    public void removePhone(String number)    { phones.removeIf(p -> p.getNumber().equals(number)); touch(); }
+    public void addEmail(EmailAddress email)  { emails.add(email);  touch(); }
+    public void removeEmail(String address)   { emails.removeIf(e -> e.getAddress().equalsIgnoreCase(address)); touch(); }
+    public void addTag(Tag tag)               { tags.add(tag);      touch(); }
+    public void removeTag(Tag tag)            { tags.remove(tag);   touch(); }
     public boolean hasTag(String tagName)     { return tags.stream().anyMatch(t -> t.getName().equalsIgnoreCase(tagName)); }
 
     public void incrementContactCount()       { contactCount++; }
     public int  getContactCount()             { return contactCount; }
+
+    // UC7 — soft-delete marks contact as deleted without removing from storage
+    public void softDelete()  { this.deleted = true;  touch(); }
+    public void restore()     { this.deleted = false; touch(); }
+    public boolean isDeleted(){ return deleted; }
+
+    private void touch()      { this.updatedAt = LocalDateTime.now(); }
 
     public UUID              getContactId()  { return contactId; }
     public UUID              getOwnerId()    { return ownerId; }
@@ -43,8 +56,8 @@ public abstract class Contact {
     public List<EmailAddress> getEmails()    { return Collections.unmodifiableList(emails); }
     public Set<Tag>          getTags()       { return Collections.unmodifiableSet(tags); }
     public LocalDateTime     getCreatedAt()  { return createdAt; }
+    public LocalDateTime     getUpdatedAt()  { return updatedAt; }
 
-    // UC5 — formatted display of a contact's full details
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -66,6 +79,7 @@ public abstract class Contact {
             sb.append("\n");
         }
         sb.append("  Added : ").append(createdAt).append("\n");
+        sb.append("  Status: ").append(deleted ? "DELETED" : "Active").append("\n");
         return sb.toString();
     }
 }

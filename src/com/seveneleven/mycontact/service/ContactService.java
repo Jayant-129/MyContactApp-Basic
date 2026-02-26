@@ -1,4 +1,4 @@
-// Provides business logic for contacts - UC6 adds edit methods using setter-based mutation
+// Provides business logic for contacts - UC7 adds softDeleteContact() and hardDeleteContact()
 package com.seveneleven.mycontact.service;
 
 import com.seveneleven.mycontact.model.*;
@@ -53,7 +53,6 @@ public class ContactService {
         System.out.println(getOwned(contactId));
     }
 
-    // UC6 — edit person contact fields using setter methods with instanceof type check
     public void editPersonName(UUID contactId, String firstName, String lastName) {
         Contact c = getOwned(contactId);
         if (!(c instanceof PersonContact))
@@ -74,7 +73,6 @@ public class ContactService {
         System.out.println("Birthday updated.");
     }
 
-    // UC6 — edit organisation contact fields using setter methods with instanceof type check
     public void editOrgName(UUID contactId, String companyName) {
         Contact c = getOwned(contactId);
         if (!(c instanceof OrganizationContact))
@@ -105,6 +103,27 @@ public class ContactService {
         c.removeEmail(address);
         contactRepository.save(c);
         System.out.println("Email removed.");
+    }
+
+    // UC7 — marks contact as deleted (hidden from listings) without removing from storage
+    public void softDeleteContact(UUID contactId) {
+        Contact c = getOwned(contactId);
+        c.softDelete();
+        contactRepository.save(c);
+        System.out.println("Contact soft-deleted: " + c.getDisplayName());
+    }
+
+    // UC7 — permanently removes the contact record from storage
+    public void hardDeleteContact(UUID contactId) {
+        getOwned(contactId);
+        contactRepository.hardDelete(contactId);
+        System.out.println("Contact permanently deleted.");
+    }
+
+    public void recordContactInteraction(UUID contactId) {
+        Contact c = getOwned(contactId);
+        c.incrementContactCount();
+        contactRepository.save(c);
     }
 
     public List<Contact> listMyContacts() {
