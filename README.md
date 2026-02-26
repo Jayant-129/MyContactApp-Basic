@@ -16,3 +16,8 @@
 - **Classes**: `ProfileService`
 - **OOP**: Setter methods with validation, encapsulated session guard
 - **Java**: Input validation, password re-verification before change
+
+### UC4 — Create Contacts
+- **Classes**: `Contact` (abstract), `PersonContact`, `OrganizationContact`, `PhoneNumber`, `EmailAddress`, `Tag`, `ContactRepository`, `ContactService`
+- **OOP**: Abstract class hierarchy, Composition (`Contact` has `List<PhoneNumber>` + `List<EmailAddress>` + `Set<Tag>`), Polymorphism (`getDisplayName()`)
+- **Java**: `UUID`, `LocalDateTime`, `Collections.unmodifiableList`, `equals()`/`hashCode()` on `Tag`
