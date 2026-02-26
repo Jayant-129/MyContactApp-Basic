@@ -56,3 +56,8 @@
 - **Classes**: `Tag`, `TagRepository`, `TagService`
 - **OOP**: `equals()`/`hashCode()` override for name-based Tag equality, `Set<Tag>` for uniqueness on contacts
 - **Java**: `Optional.orElseGet()` for get-or-create, `HashMap` tag store, EnumSet-style uniqueness via `HashSet`
+
+### UC12 — Console App Layer
+- **Classes**: `ConsoleHelper`, `AuthMenu`, `ContactMenu`, `ProfileMenu`, `GroupMenu`, `TagMenu`, `MainMenu`, `ContactsApp`
+- **OOP**: Constructor-based dependency injection, single-responsibility menus, encapsulated input handling
+- **Java**: `Scanner` wrapper, `switch/case` routing, `UUID.fromString()`, `try-catch` for all user input errors
