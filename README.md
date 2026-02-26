@@ -46,3 +46,8 @@
 - **Classes**: `SearchService`
 - **OOP**: Single-responsibility search class encapsulating all query logic
 - **Java**: Stream API, `Predicate` via lambda, `String.contains()`, case-insensitive comparison
+
+### UC10 — Filter & Sort
+- **Classes**: `FilterSortService`
+- **OOP**: Encapsulated filter and sort strategies as methods
+- **Java**: `Comparator.comparing()`, `Comparator.reversed()`, multi-condition `filter()` with Streams, `LocalDateTime` range comparison
