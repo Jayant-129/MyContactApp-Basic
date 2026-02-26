@@ -41,3 +41,8 @@
 - **Classes**: `ContactGroup`, `GroupRepository`, `GroupService`
 - **OOP**: Encapsulated group state, Collection-based bulk operations
 - **Java**: `List<Contact>`, `forEach` + lambda for bulk tag/delete, `Collections.unmodifiableList`
+
+### UC9 — Search Contacts
+- **Classes**: `SearchService`
+- **OOP**: Single-responsibility search class encapsulating all query logic
+- **Java**: Stream API, `Predicate` via lambda, `String.contains()`, case-insensitive comparison
